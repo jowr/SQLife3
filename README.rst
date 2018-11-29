@@ -8,9 +8,9 @@ SQLife3 - SQLite3 Swiss Army Knife
 This colelction of CMake scripts provides easy access to the following 
 very useful SQLite-related libraries. 
 
- - Base SQlite3 library with encryption (SEE): `wxSQLite3`_
- - A thin, object-oriented C++ wrapper: `SQLiteCpp`_
- - Object-relational mapping library for C++: `SQLite ORM`_
+- Base SQlite3 library with encryption (SEE): `wxSQLite3`_
+- A thin, object-oriented C++ wrapper: `SQLiteCpp`_
+- Object-relational mapping library for C++: `SQLite ORM`_
 
 Please note that the listed projects all have their own license. You should
 check whether you can use all components from this package in your code.
@@ -62,6 +62,6 @@ References
     :target: https://travis-ci.org/jowr/SQLife3
     :alt: Travis CI Linux and OSX builds
 
-.. |appveyor| image:: https://ci.appveyor.com/api/projects/status/w7h96e0s3jmsg13a/branch/develop?svg=true
+.. |appveyor| image:: https://ci.appveyor.com/api/projects/status/u7gp3868ukak2vbo?svg=true
     :target: https://ci.appveyor.com/project/jowr/SQLife3
     :alt: AppVeyor Windows builds
