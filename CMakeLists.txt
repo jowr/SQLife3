@@ -149,17 +149,22 @@ endmacro()
 
 
 add_definitions(-DSQLITE_HAS_CODEC=1)
-set(SQLITECPP_BUILD_EXAMPLES ON)
-set(SQLITECPP_BUILD_TESTS ON)
-set(SQLITECPP_RUN_CPPCHECK OFF)
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/externals/wxsqlite3/sqlite3secure/src)
-set(SQLITECPP_INTERNAL_SQLITE OFF)
-#set(SQLITECPP_INTERNAL_SQLITE OFF CACHE BOOL "Force external SQLite3 library" FORCE)
+set(SQLITECPP_BUILD_EXAMPLES ON CACHE BOOL "Build examples")
+set(SQLITECPP_BUILD_TESTS ON CACHE BOOL "Build tests")
+set(SQLITECPP_RUN_CPPCHECK OFF CACHE BOOL "Run CPPCHECK")
+set(SQLITECPP_RUN_CPPLINT OFF CACHE BOOL "Run CPPLINT")
+set(SQLITECPP_INTERNAL_SQLITE OFF CACHE BOOL "Force external SQLite3 library")
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/externals/wxsqlite3/sqlite3secure/src)
 add_subdirectory(externals/SQLiteCpp)
-target_include_directories(SQLiteCpp PUBLIC $<TARGET_PROPERTY:sqlite3,INCLUDE_DIRECTORIES>)
+#target_include_directories(SQLiteCpp PUBLIC $<TARGET_PROPERTY:sqlite3,INCLUDE_DIRECTORIES>)
 #target_include_directories(SQLiteCpp_tests PUBLIC $<TARGET_PROPERTY:sqlite3,INCLUDE_DIRECTORIES>)
 
-
+add_custom_target(
+  SQLiteCpp_tests_deploy
+  COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:sqlite3>" "$<TARGET_FILE_DIR:SQLiteCpp_tests>"
+  DEPENDS SQLiteCpp_tests
+  COMMENT "Deploying the sqlite3 library"
+)
 
 
 

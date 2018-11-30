@@ -73,6 +73,7 @@ before_install:
 script:
   - mkdir build && cd build
   - echo "-- The CMake version is $(cmake --version)"
-  - cmake .. -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE
+  - cmake .. -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE -DSQLITE3_BUILD_SHARED_LIBS=OFF
   - cmake --build . --target sqlite3
-  - cmake --build . --target SQLiteCpp_tests
+  - cmake --build . --target SQLiteCpp_tests_deploy
+  - ctest --verbose --output-on-failure
