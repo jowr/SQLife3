@@ -115,6 +115,14 @@ target_compile_definitions(sqlite3shell PUBLIC
   SQLITE_USER_AUTHENTICATION
 )
 
+option(SQLITE3_BUILD_SHARED_LIBS "Use a shared library for SQLite3" ON)
+# Create an alias that respects the default CMake settings
+if(BUILD_SHARED_LIBS OR SQLITE3_BUILD_SHARED_LIBS)
+  add_library(sqlite3 ALIAS sqlite3dll)
+else(BUILD_SHARED_LIBS OR SQLITE3_BUILD_SHARED_LIBS)
+  add_library(sqlite3 ALIAS sqlite3lib)
+endif(BUILD_SHARED_LIBS OR SQLITE3_BUILD_SHARED_LIBS)
+
 set_property(TARGET sqlite3dll PROPERTY SOVERSION ${PROJECT_VERSION})
 #export(TARGETS sqlite3 FILE ${CMAKE_CURRENT_BINARY_DIR}/sqlite3-exports.cmake)
 set_property(TARGET sqlite3dll PROPERTY OUTPUT_NAME sqlite3)
@@ -127,7 +135,7 @@ endif()
 macro(add_sqlite3_to_target param_TARGETNAME)
   add_dependencies(${param_TARGETNAME} sqlite3)
   target_link_libraries(${param_TARGETNAME} $<TARGET_LINKER_FILE:sqlite3>)
-  #target_compile_definitions(${param_TARGETNAME} PUBLIC SQLITE_HAS_CODEC=1)
+  target_compile_definitions(${param_TARGETNAME} PUBLIC SQLITE_HAS_CODEC=1)
   target_include_directories(${param_TARGETNAME} PUBLIC $<TARGET_PROPERTY:sqlite3,INCLUDE_DIRECTORIES>)
   if(SQLITE3_BUILD_SHARED_LIBS)
     add_custom_command(
@@ -140,35 +148,32 @@ macro(add_sqlite3_to_target param_TARGETNAME)
 endmacro()
 
 
+add_definitions(-DSQLITE_HAS_CODEC=1)
 set(SQLITECPP_BUILD_EXAMPLES ON CACHE BOOL "Build examples")
 set(SQLITECPP_BUILD_TESTS ON CACHE BOOL "Build tests")
 set(SQLITECPP_RUN_CPPCHECK OFF CACHE BOOL "Run CPPCHECK")
 set(SQLITECPP_RUN_CPPLINT OFF CACHE BOOL "Run CPPLINT")
 set(SQLITECPP_INTERNAL_SQLITE OFF CACHE BOOL "Force external SQLite3 library")
-#
-if(NOT SQLITECPP_INTERNAL_SQLITE)
-  add_definitions(-DSQLITE_HAS_CODEC=1)
-  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/externals/wxsqlite3/sqlite3secure/src)
-  option(SQLITE3_BUILD_SHARED_LIBS "Use a shared library for SQLite3" ON)
-  # Create an alias that respects the default CMake settings
-  if(BUILD_SHARED_LIBS OR SQLITE3_BUILD_SHARED_LIBS)
-    add_library(sqlite3 ALIAS sqlite3dll)
-  else(BUILD_SHARED_LIBS OR SQLITE3_BUILD_SHARED_LIBS)
-    add_library(sqlite3 ALIAS sqlite3lib)
-  endif(BUILD_SHARED_LIBS OR SQLITE3_BUILD_SHARED_LIBS)
-endif(NOT SQLITECPP_INTERNAL_SQLITE)
-#
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/externals/wxsqlite3/sqlite3secure/src)
 add_subdirectory(externals/SQLiteCpp)
 #target_include_directories(SQLiteCpp PUBLIC $<TARGET_PROPERTY:sqlite3,INCLUDE_DIRECTORIES>)
 #target_include_directories(SQLiteCpp_tests PUBLIC $<TARGET_PROPERTY:sqlite3,INCLUDE_DIRECTORIES>)
 
-add_custom_target(
-  SQLiteCpp_tests_deploy
-  COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:sqlite3>" "$<TARGET_FILE_DIR:SQLiteCpp_tests>"
-  DEPENDS SQLiteCpp_tests
-  COMMENT "Deploying the sqlite3 library"
-)
-
+if(BUILD_SHARED_LIBS OR SQLITE3_BUILD_SHARED_LIBS)
+  add_custom_target(
+    SQLiteCpp_tests_deploy
+    COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:sqlite3>" "$<TARGET_FILE_DIR:SQLiteCpp_tests>"
+    DEPENDS SQLiteCpp_tests
+    COMMENT "Deploying the sqlite3 library"
+  )
+else(BUILD_SHARED_LIBS OR SQLITE3_BUILD_SHARED_LIBS)
+  add_custom_target(
+      SQLiteCpp_tests_deploy
+      COMMAND echo "Skipped: No deploy step required for stically linked libraries."
+      DEPENDS SQLiteCpp_tests
+      COMMENT "Deploying the sqlite3 library"
+    )
+endif(BUILD_SHARED_LIBS OR SQLITE3_BUILD_SHARED_LIBS)
 
 
 
