@@ -44,4 +44,5 @@ build_script:
   - cmake --build . --config %configuration% --target sqlite3dll
   - cmake --build . --config %configuration% --target sqlite3lib
   - cmake --build . --config %configuration% --target SQLiteCpp_tests_deploy
-  - ctest --verbose --output-on-failure
+  - externals\SQLiteCpp\%configuration%\SQLiteCpp_tests.exe
+  #- ctest --verbose --output-on-failure

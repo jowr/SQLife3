@@ -12,10 +12,6 @@ matrix:
 
     # Add OSX with default Clang
     - os: osx
-      osx_image: xcode8
-      env:
-         - CMAKE_BUILD_TYPE=Release
-    - os: osx
       osx_image: xcode9
       env:
          - CMAKE_BUILD_TYPE=Release
@@ -77,4 +73,5 @@ script:
   - cmake --build . --target sqlite3dll
   - cmake --build . --target sqlite3lib
   - cmake --build . --target SQLiteCpp_tests_deploy
-  - ctest --verbose --output-on-failure
+  - ./externals/SQLiteCpp/SQLiteCpp_tests
+#  - ctest --verbose --output-on-failure
