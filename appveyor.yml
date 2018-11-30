@@ -37,7 +37,7 @@ before_build:
   - mkdir C:\projects\SQLife3_build
   - cd C:\projects\SQLife3_build
   - cmake --version
-  - cmake C:\projects\SQLife3 -G %generator%
+  - cmake C:\projects\SQLife3 -G %generator% -DSQLIFE3_BUILD_TESTS=ON
 
 build_script:
   - cd C:\projects\SQLife3_build

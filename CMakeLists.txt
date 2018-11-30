@@ -2,6 +2,14 @@ cmake_minimum_required(VERSION 3.2)
 
 project(SQLife3 VERSION 0.1.0)
 
+
+option(SQLIFE3_BUILD_TESTS "Create test projects" OFF)
+
+
+###########################################################################
+# wxSQLite3
+###########################################################################
+
 message(STATUS "--------------------- wxSQLite3_SEE ---------------------")
 message(STATUS "Please note that the rijndael.* files are licensed under" )
 message(STATUS "the LGPL-3.0+ WITH WxWindows-exception-3.1. Make sure to" )
@@ -148,9 +156,12 @@ macro(add_sqlite3_to_target param_TARGETNAME)
 endmacro()
 
 
+###########################################################################
+# SQLiteCpp
+###########################################################################
 add_definitions(-DSQLITE_HAS_CODEC=1)
-set(SQLITECPP_BUILD_EXAMPLES ON CACHE BOOL "Build examples")
-set(SQLITECPP_BUILD_TESTS ON CACHE BOOL "Build tests")
+set(SQLITECPP_BUILD_EXAMPLES ${SQLIFE3_BUILD_TESTS} CACHE BOOL "Build examples")
+set(SQLITECPP_BUILD_TESTS ${SQLIFE3_BUILD_TESTS} CACHE BOOL "Build tests")
 set(SQLITECPP_RUN_CPPCHECK OFF CACHE BOOL "Run CPPCHECK")
 set(SQLITECPP_RUN_CPPLINT OFF CACHE BOOL "Run CPPLINT")
 set(SQLITECPP_INTERNAL_SQLITE OFF CACHE BOOL "Force external SQLite3 library")
@@ -159,21 +170,22 @@ add_subdirectory(externals/SQLiteCpp)
 #target_include_directories(SQLiteCpp PUBLIC $<TARGET_PROPERTY:sqlite3,INCLUDE_DIRECTORIES>)
 #target_include_directories(SQLiteCpp_tests PUBLIC $<TARGET_PROPERTY:sqlite3,INCLUDE_DIRECTORIES>)
 
-if(BUILD_SHARED_LIBS OR SQLITE3_BUILD_SHARED_LIBS)
-  add_custom_target(
-    SQLiteCpp_tests_deploy
-    COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:sqlite3>" "$<TARGET_FILE_DIR:SQLiteCpp_tests>"
-    DEPENDS SQLiteCpp_tests
-    COMMENT "Deploying the sqlite3 library"
-  )
-else(BUILD_SHARED_LIBS OR SQLITE3_BUILD_SHARED_LIBS)
-  add_custom_target(
+if(SQLIFE3_BUILD_TESTS)
+  if(BUILD_SHARED_LIBS OR SQLITE3_BUILD_SHARED_LIBS)
+    add_custom_target(
       SQLiteCpp_tests_deploy
-      COMMAND echo "Skipped: No deploy step required for stically linked libraries."
+      COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:sqlite3>" "$<TARGET_FILE_DIR:SQLiteCpp_tests>"
       DEPENDS SQLiteCpp_tests
       COMMENT "Deploying the sqlite3 library"
     )
-endif(BUILD_SHARED_LIBS OR SQLITE3_BUILD_SHARED_LIBS)
-
+  else(BUILD_SHARED_LIBS OR SQLITE3_BUILD_SHARED_LIBS)
+    add_custom_target(
+        SQLiteCpp_tests_deploy
+        COMMAND echo "Skipped: No deploy step required for stically linked libraries."
+        DEPENDS SQLiteCpp_tests
+        COMMENT "Deploying the sqlite3 library"
+      )
+  endif(BUILD_SHARED_LIBS OR SQLITE3_BUILD_SHARED_LIBS)
+endif(SQLIFE3_BUILD_TESTS)
 
 
