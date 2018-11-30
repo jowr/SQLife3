@@ -1,0 +1,38 @@
+language: cpp
+
+branches:
+  except:
+    - gh-pages
+
+env:
+  - CMAKE_BUILD_TYPE=Debug
+  - CMAKE_BUILD_TYPE=Release
+  
+os:
+  - linux
+  - osx
+
+compiler:
+  - gcc
+  - clang
+
+sudo: required
+dist: trusty
+
+install:
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+         sudo apt-add-repository -y ppa:george-edison55/cmake-3.x
+      && sudo apt-get -qq update
+      && sudo apt-get -qq install build-essential cmake
+      ;
+    else
+         brew update
+      && brew unlink cmake
+      && brew install cmake
+      ;
+    fi
+
+script:
+  - mkdir build && cd build
+  - cmake .. -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE
+  - cmake --build . --config $CMAKE_BUILD_TYPE
