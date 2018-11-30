@@ -43,7 +43,7 @@ of the shared library:
 .. code-block:: cmake
 
    add_executable(your_executable ${YOUR_SOURCES})
-   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/externals/SQLIfe3)
+   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/externals/SQLife3)
    add_sqlite3_to_target(your_executable)
 
 
