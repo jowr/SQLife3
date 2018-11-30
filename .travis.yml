@@ -6,9 +6,9 @@ branches:
 
 matrix:
   include:
-    # Start with the default images
-    - os: osx
-    - os: linux
+    ## Start with the default images
+    #- os: osx
+    #- os: linux
 
     # Add OSX with default Clang
     - os: osx
@@ -18,21 +18,7 @@ matrix:
     - os: osx
       osx_image: xcode10
 
-   # Add Linux with custom GCC
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - george-edison55-precise-backports
-          packages:
-            - g++-4.9
-            - cmake-data
-            - cmake
-      env:
-         - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
-
-    # works on Precise and Trusty
+    # Add Linux with custom GCC > 4.x
     - os: linux
       addons:
         apt:
@@ -46,7 +32,6 @@ matrix:
       env:
          - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
 
-    # works on Precise and Trusty
     - os: linux
       addons:
         apt:
@@ -60,7 +45,6 @@ matrix:
       env:
         - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
 
-    # works on Precise and Trusty
     - os: linux
       addons:
         apt:
@@ -79,5 +63,6 @@ before_install:
 
 script:
   - mkdir build && cd build
+  - echo "-- The CMake version is $(cmake --version)"
   - cmake .. -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE
   - cmake --build . --config $CMAKE_BUILD_TYPE
