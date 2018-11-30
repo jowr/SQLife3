@@ -74,4 +74,5 @@ script:
   - mkdir build && cd build
   - echo "-- The CMake version is $(cmake --version)"
   - cmake .. -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE
-  - cmake --build .
+  - cmake --build . --target sqlite3
+  - cmake --build . --target SQLiteCpp_tests

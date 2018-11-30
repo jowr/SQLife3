@@ -41,4 +41,5 @@ before_build:
 
 build_script:
   - cd C:\projects\SQLife3_build
-  - cmake --build . --config %configuration%
+  - cmake --build . --config %configuration% --target sqlite3
+  - cmake --build . --config %configuration% --target SQLiteCpp_tests

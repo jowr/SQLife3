@@ -146,3 +146,17 @@ macro(add_sqlite3_to_target param_TARGETNAME)
     )
   endif(SQLITE3_BUILD_SHARED_LIBS)
 endmacro()
+
+
+add_definitions(-DSQLITE_HAS_CODEC=1)
+include_directories($<TARGET_PROPERTY:sqlite3,INCLUDE_DIRECTORIES>)
+set(SQLITECPP_INTERNAL_SQLITE OFF)
+add_subdirectory(externals/SQLiteCpp)
+
+
+
+
+
+
+
+
