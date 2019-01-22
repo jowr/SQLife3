@@ -170,6 +170,14 @@ add_subdirectory(externals/SQLiteCpp)
 #target_include_directories(SQLiteCpp PUBLIC $<TARGET_PROPERTY:sqlite3,INCLUDE_DIRECTORIES>)
 #target_include_directories(SQLiteCpp_tests PUBLIC $<TARGET_PROPERTY:sqlite3,INCLUDE_DIRECTORIES>)
 
+# Provide a macro that handles the library deployment and the include paths
+macro(add_sqlitecpp_to_target param_TARGETNAME)
+  add_dependencies(${param_TARGETNAME} SQLiteCpp)
+  target_link_libraries(${param_TARGETNAME} $<TARGET_LINKER_FILE:SQLiteCpp>)
+  #target_compile_definitions(${param_TARGETNAME} PUBLIC SQLITE_HAS_CODEC=1)
+  target_include_directories(${param_TARGETNAME} PUBLIC $<TARGET_PROPERTY:SQLiteCpp,INCLUDE_DIRECTORIES>)
+endmacro()
+
 if(SQLIFE3_BUILD_TESTS)
   if(BUILD_SHARED_LIBS OR SQLITE3_BUILD_SHARED_LIBS)
     add_custom_target(
